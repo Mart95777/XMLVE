@@ -6,9 +6,16 @@ package com.mart95777.xmlve;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -24,6 +31,10 @@ public class Xmlve extends JFrame {
 	public static final String VERSION = "1.0.0";
 	JPanel mainPanel;
 	JTextArea testText;
+	JMenuBar menuBar;
+	
+	
+	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -58,6 +69,37 @@ public class Xmlve extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new GridBagLayout());
+		
+		menuBar = new JMenuBar();
+	    // File Menu, F - Mnemonic
+	    JMenu fileMenu = new JMenu("File");
+	    fileMenu.setMnemonic(KeyEvent.VK_F);
+	    menuBar.add(fileMenu);
+	    // File->New, N - Mnemonic
+	    JMenuItem newMenuItem = new JMenuItem("New", KeyEvent.VK_N);
+	    newMenuItem.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		JOptionPane.showMessageDialog(null, "Testing menu item");
+	        }
+	    });
+	    fileMenu.add(newMenuItem);
+
+	    //frame.setJMenuBar(menuBar);
+	    setJMenuBar(menuBar);
+	    
+//	    menuBar.addActionListener(new ActionListener() {
+//			  public void actionPerformed(ActionEvent evt) {
+//				// 
+//				//treeOfUser.invalidate();
+//				//treeOfUser.validate();
+//				//treeOfUser.repaint();
+//				//treeOfUser.setModel(modelTree);
+//				//modelTree.reload();
+//				mainPanel.updateUI();
+//				JOptionPane.showMessageDialog(null, "So?...");
+//				
+//			  }
+//		});
 		
 		testText = new JTextArea();
 		testText.setText("Test text");
