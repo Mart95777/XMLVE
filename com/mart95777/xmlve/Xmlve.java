@@ -10,6 +10,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -34,6 +37,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -158,14 +162,27 @@ public class Xmlve extends JFrame {
 //			  }
 //		});
 		
-		testText = new JTextArea();
-		testText.setText("Test text");
-		testText.setEditable(false);
-		testText.setOpaque(false);
-		addcomponent(mainPanel, testText, 0,0,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE);
+		
 		
 		// Set up the tree
 		tree = new JTree();
+		
+		 MouseListener ml = new MouseAdapter() {
+		     public void mousePressed(MouseEvent e) {
+		         int selRow = tree.getRowForLocation(e.getX(), e.getY());
+		         TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+		         if(selRow != -1) {
+		             if(e.getClickCount() == 1) {
+		                 //mySingleClick(selRow, selPath);
+		            	 JOptionPane.showMessageDialog(null, "Testing click mouse");
+		             }
+		             else if(e.getClickCount() == 2) {
+		                 //myDoubleClick(selRow, selPath);
+		             }
+		         }
+		     }
+		 };
+		 tree.addMouseListener(ml);
 
 		// Build left-side view
 		JScrollPane treeView = new JScrollPane(tree);
@@ -186,7 +203,13 @@ public class Xmlve extends JFrame {
 		splitPane.setMaximumSize(new Dimension(3000,1500));
 		
 		// Add GUI components
-		addcomponent(mainPanel, splitPane, 0,1,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE);
+		addcomponent(mainPanel, splitPane, 0,0,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH);
+		
+		testText = new JTextArea();
+		testText.setText("Test text");
+		testText.setEditable(false);
+		testText.setOpaque(false);
+		addcomponent(mainPanel, testText, 0,1,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH);
 		
 		this.add(mainPanel);
 		//this.pack();
