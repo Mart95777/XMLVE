@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -29,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 
@@ -167,20 +169,58 @@ public class Xmlve extends JFrame {
 		// Set up the tree
 		tree = new JTree();
 		
-		 MouseListener ml = new MouseAdapter() {
-		     public void mousePressed(MouseEvent e) {
-		         int selRow = tree.getRowForLocation(e.getX(), e.getY());
-		         TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
-		         if(selRow != -1) {
-		             if(e.getClickCount() == 1) {
-		                 //mySingleClick(selRow, selPath);
-		            	 JOptionPane.showMessageDialog(null, "Testing click mouse");
-		             }
-		             else if(e.getClickCount() == 2) {
-		                 //myDoubleClick(selRow, selPath);
-		             }
+//		 MouseListener ml = new MouseAdapter() {
+//		     public void mousePressed(MouseEvent e) {
+//		         int selRow = tree.getRowForLocation(e.getX(), e.getY());
+//		         TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+//		         if(selRow != -1) {
+//		             if(e.getClickCount() == 1) {
+//		                 //mySingleClick(selRow, selPath);
+//		            	 JOptionPane.showMessageDialog(null, "Testing click mouse");
+//		             }
+//		             else if(e.getClickCount() == 2) {
+//		                 //myDoubleClick(selRow, selPath);
+//		             }
+//		         }
+//		     }
+		     // another version
+		     MouseListener ml = new MouseAdapter() {
+		         public void mousePressed(MouseEvent mouseEvent) {
+		           int modifiers = mouseEvent.getModifiers();
+		           if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+		             //System.out.println("Left button pressed.");
+		           }
+		           if ((modifiers & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
+		             //System.out.println("Middle button pressed.");
+		           }
+		           if ((modifiers & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
+		             //System.out.println("Right button pressed.");
+		        	   
+		           }
 		         }
-		     }
+		         public void mouseReleased(MouseEvent e) {
+		           if (SwingUtilities.isLeftMouseButton(e)) {
+		             //System.out.println("Left button released.");
+		           }
+		           if (SwingUtilities.isMiddleMouseButton(e)) {
+		             //System.out.println("Middle button released.");
+		           }
+		           if (SwingUtilities.isRightMouseButton(e)) {
+		             //System.out.println("Right button released.");
+		        	   int selRow = tree.getRowForLocation(e.getX(), e.getY());
+				         TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+				         if(selRow != -1) {
+				             if(e.getClickCount() == 1) {
+				                 //mySingleClick(selRow, selPath);
+				            	 JOptionPane.showMessageDialog(null, "Testing click mouse, right released");
+				             }
+				             else if(e.getClickCount() == 2) {
+				                 //myDoubleClick(selRow, selPath);
+				             }
+				         }
+		           }
+		           //System.out.println();
+		         }
 		 };
 		 tree.addMouseListener(ml);
 
