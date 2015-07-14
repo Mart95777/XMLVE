@@ -26,6 +26,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -62,6 +63,7 @@ public class Xmlve extends JFrame {
 	JPanel mainPanel;
 	JTextArea testText;
 	JMenuBar menuBar;
+	JPopupMenu menuPopUp;
 	private JTree tree;
 	private Document document;
     private DefaultTreeModel treeModel;
@@ -111,6 +113,7 @@ public class Xmlve extends JFrame {
 		mainPanel.setLayout(new GridBagLayout());
 		
 		menuBar = new JMenuBar();
+		
 	    // File Menu, F - Mnemonic
 	    JMenu fileMenu = new JMenu("File");
 	    fileMenu.setMnemonic(KeyEvent.VK_F);
@@ -212,7 +215,10 @@ public class Xmlve extends JFrame {
 				         if(selRow != -1) {
 				             if(e.getClickCount() == 1) {
 				                 //mySingleClick(selRow, selPath);
-				            	 JOptionPane.showMessageDialog(null, "Testing click mouse, right released");
+				            	 //JOptionPane.showMessageDialog(null, "Testing click mouse, right released");
+				            	 if (e.isPopupTrigger()) {
+				                     menuPopUp.show(e.getComponent(), e.getX(), e.getY());
+				                   }
 				             }
 				             else if(e.getClickCount() == 2) {
 				                 //myDoubleClick(selRow, selPath);
@@ -223,6 +229,7 @@ public class Xmlve extends JFrame {
 		         }
 		 };
 		 tree.addMouseListener(ml);
+		 tree.addMouseListener(new PopupTriggerListener());
 
 		// Build left-side view
 		JScrollPane treeView = new JScrollPane(tree);
@@ -250,6 +257,24 @@ public class Xmlve extends JFrame {
 		testText.setEditable(false);
 		testText.setOpaque(false);
 		addcomponent(mainPanel, testText, 0,1,1,1, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH);
+		
+		// Popup menu --> here?
+		menuPopUp = new JPopupMenu("Popup");
+		JMenuItem item = new JMenuItem("Test1");
+	    item.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		System.out.println("Menu item Test1");
+	    	}
+		});
+		menuPopUp.add(item);
+
+		item = new JMenuItem("Test2");
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Menu item Test2");
+			}
+		});
+		menuPopUp.add(item);
 		
 		this.add(mainPanel);
 		//this.pack();
@@ -326,4 +351,17 @@ private Document parseDomFromXml(File file) {
     }
     return document;
 }//end of parseDomFromXml(File file)
+
+/**
+ * Inner class
+ */
+
+class PopupTriggerListener extends MouseAdapter {
+    public void mousePressed(MouseEvent ev) {
+      if (ev.isPopupTrigger()) {
+    	  menuPopUp.show(ev.getComponent(), ev.getX(), ev.getY());
+      }
+    }
+}// end of inner class PopupTriggerListener extends MouseAdapter
+
 }// end of Xmlve class
