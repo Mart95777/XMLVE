@@ -260,18 +260,51 @@ public class Xmlve extends JFrame {
 		
 		// Popup menu --> here?
 		menuPopUp = new JPopupMenu("Popup");
-		JMenuItem item = new JMenuItem("Test1");
+		JMenuItem item = new JMenuItem("Clear All");
 	    item.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		System.out.println("Menu item Test1");
+	    		Object o = tree.getModel().getRoot();
+	    		//JOptionPane.showMessageDialog(null, o.toString());
+	    		DefaultMutableTreeNode  dmn = (DefaultMutableTreeNode )o;
+	    		dmn.removeAllChildren();
+	    		((DefaultTreeModel)tree.getModel()).reload();
+	    		//treeModel.reload();
+	    		//tree.getModel().reload();
 	    	}
 		});
 		menuPopUp.add(item);
+		
+		
+//		public void fillUserList(){    
+//		    List<User> userFriends = ClientController.getInstance().getPrieteniiUserului(user);
+//		    root.removeAllChildren(); //this removes all nodes
+//		    model.reload(); //this notifies the listeners and changes the GUI
+//		    for(int i=0;i<userFriends.size();i++){
+//		        User user = userFriends.get(i);
+//		        model.insertNodeInto(new DefaultMutableTreeNode(user.getNume()), root, i);        
+//		    }
+//		}
 
 		item = new JMenuItem("Test2");
 		item.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Menu item Test2");
+			}
+		});
+		menuPopUp.add(item);
+		
+		item = new JMenuItem("Expand All");
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				expandAll(tree);
+			}
+		});
+		menuPopUp.add(item);
+		
+		item = new JMenuItem("Collapse All");
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				collapseAll(tree);
 			}
 		});
 		menuPopUp.add(item);
@@ -363,5 +396,21 @@ class PopupTriggerListener extends MouseAdapter {
       }
     }
 }// end of inner class PopupTriggerListener extends MouseAdapter
+
+public void expandAll(JTree tree) {
+    int row = 0;
+    while (row < tree.getRowCount()) {
+      tree.expandRow(row);
+      row++;
+      }
+}//end of public void expandAll(JTree tree)
+
+public void collapseAll(JTree tree) {
+    int row = tree.getRowCount() - 1;
+    while (row >= 0) {
+      tree.collapseRow(row);
+      row--;
+      }
+}//end of public void collapseAll(JTree tree)
 
 }// end of Xmlve class
