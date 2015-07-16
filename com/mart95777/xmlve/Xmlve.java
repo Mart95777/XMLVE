@@ -114,6 +114,8 @@ public class Xmlve extends JFrame {
 		
 		menuBar = new JMenuBar();
 		
+		
+		
 	    // File Menu, F - Mnemonic
 	    JMenu fileMenu = new JMenu("File");
 	    fileMenu.setMnemonic(KeyEvent.VK_F);
@@ -285,10 +287,25 @@ public class Xmlve extends JFrame {
 //		    }
 //		}
 
-		item = new JMenuItem("Test2");
+		item = new JMenuItem("Add \"new\" node");
 		item.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Menu item Test2");
+				//System.out.println("Menu item Test2");
+				//creating a new node
+				DefaultMutableTreeNode root, child, chosen;
+				Object o = tree.getModel().getRoot();
+				root = (DefaultMutableTreeNode )o;
+				child = new DefaultMutableTreeNode("new");
+		          // What's the last one you clicked?
+		          chosen = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		          if (chosen == null)
+		            chosen = root;
+		          // The model will create the appropriate event.
+		          // In response, the tree will update itself:
+		          ((DefaultTreeModel) tree.getModel()).insertNodeInto(child, chosen, 0);
+				
+				
+				
 			}
 		});
 		menuPopUp.add(item);
