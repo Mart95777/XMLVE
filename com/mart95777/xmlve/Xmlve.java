@@ -326,6 +326,16 @@ public class Xmlve extends JFrame {
 		});
 		menuPopUp.add(item);
 		
+		item = new JMenuItem("Rename");
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String newName;
+				newName = JOptionPane.showInputDialog("New name for the node: ");
+				changeNodeName(newName);
+			}
+		});
+		menuPopUp.add(item);
+		
 		this.add(mainPanel);
 		//this.pack();
 		this.setVisible(true);
@@ -339,6 +349,20 @@ public class Xmlve extends JFrame {
             for (int i = 0; i < tree.getRowCount(); i++) {
                 tree.expandRow(i);
             }
+        }
+    }
+    /**
+     * Change the name of the currently selected node
+     * @param newName Name to change the node too
+     */
+    public void changeNodeName(String newName) {
+    	DefaultMutableTreeNode chosen;
+    	// What's the last one you clicked?
+        chosen = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+        if (chosen != null){
+        	chosen.setUserObject(newName);
+        }else{
+        	JOptionPane.showMessageDialog(null, "No node selected!");
         }
     }
 
