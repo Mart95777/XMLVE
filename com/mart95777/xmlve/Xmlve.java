@@ -262,20 +262,6 @@ public class Xmlve extends JFrame {
 		
 		// Popup menu --> here?
 		menuPopUp = new JPopupMenu("Popup");
-		JMenuItem item = new JMenuItem("Clear All");
-	    item.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent e) {
-	    		Object o = tree.getModel().getRoot();
-	    		//JOptionPane.showMessageDialog(null, o.toString());
-	    		DefaultMutableTreeNode  dmn = (DefaultMutableTreeNode )o;
-	    		dmn.removeAllChildren();
-	    		((DefaultTreeModel)tree.getModel()).reload();
-	    		//treeModel.reload();
-	    		//tree.getModel().reload();
-	    	}
-		});
-		menuPopUp.add(item);
-		
 		
 //		public void fillUserList(){    
 //		    List<User> userFriends = ClientController.getInstance().getPrieteniiUserului(user);
@@ -287,7 +273,7 @@ public class Xmlve extends JFrame {
 //		    }
 //		}
 
-		item = new JMenuItem("Add \"new\" node");
+		JMenuItem item = new JMenuItem("Add \"new\" node");
 		item.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//System.out.println("Menu item Test2");
@@ -303,12 +289,20 @@ public class Xmlve extends JFrame {
 		          // The model will create the appropriate event.
 		          // In response, the tree will update itself:
 		          ((DefaultTreeModel) tree.getModel()).insertNodeInto(child, chosen, 0);
-				
-				
-				
 			}
 		});
 		menuPopUp.add(item);
+		
+		item = new JMenuItem("Rename");
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String newName;
+				newName = JOptionPane.showInputDialog("New name for the node: ");
+				changeNodeName(newName);
+			}
+		});
+		menuPopUp.add(item);
+		menuPopUp.addSeparator();
 		
 		item = new JMenuItem("Expand All");
 		item.addActionListener(new ActionListener() {
@@ -325,14 +319,21 @@ public class Xmlve extends JFrame {
 			}
 		});
 		menuPopUp.add(item);
+		menuPopUp.addSeparator();
 		
-		item = new JMenuItem("Rename");
-		item.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String newName;
-				newName = JOptionPane.showInputDialog("New name for the node: ");
-				changeNodeName(newName);
-			}
+		
+		
+		item = new JMenuItem("Clear All");
+	    item.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		Object o = tree.getModel().getRoot();
+	    		//JOptionPane.showMessageDialog(null, o.toString());
+	    		DefaultMutableTreeNode  dmn = (DefaultMutableTreeNode )o;
+	    		dmn.removeAllChildren();
+	    		((DefaultTreeModel)tree.getModel()).reload();
+	    		//treeModel.reload();
+	    		//tree.getModel().reload();
+	    	}
 		});
 		menuPopUp.add(item);
 		
