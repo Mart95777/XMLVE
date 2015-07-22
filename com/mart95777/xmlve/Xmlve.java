@@ -171,12 +171,7 @@ public class Xmlve extends JFrame {
 	                DOMSource domSource = new DOMSource(document);
 	                
 	                // choosing file name and path
-	                String filename = "";
-	                String dir = "";
-	                saveFileDir(filename,dir);
-	                JOptionPane.showMessageDialog(null, "file name: "+filename);
-	                JOptionPane.showMessageDialog(null, "dir: "+dir);
-	                StreamResult sr = new StreamResult(new File(dir,filename));
+	                StreamResult sr = new StreamResult(saveFile());
 	                tf.transform(domSource, sr);
 
 	            } catch (TransformerException ex) {
@@ -476,17 +471,20 @@ class PopupTriggerListener extends MouseAdapter {
  * @param tree
  */
 
-private void saveFileDir(String aFilename, String aDir){
+private File saveFile(){
 	JFileChooser c = new JFileChooser();
+	File returnFile;
     // Demonstrate "Save" dialog:
     int rVal = c.showSaveDialog(Xmlve.this);
     if (rVal == JFileChooser.APPROVE_OPTION) {
-    	aFilename = c.getSelectedFile().getName();
-    	aDir = c.getCurrentDirectory().toString();
+    	returnFile = c.getSelectedFile();
+    	return returnFile;
     }
-    if (rVal == JFileChooser.CANCEL_OPTION) {
+    else {
     	JOptionPane.showMessageDialog(null, "no file selected!");
+    	return null;
     }
+	
 }//end of private void saveFileDir(String aFilename, String aDir)
 
 public void expandAll(JTree tree) {
