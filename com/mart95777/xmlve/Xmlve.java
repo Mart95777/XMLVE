@@ -43,6 +43,12 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -75,8 +81,6 @@ public class Xmlve extends JFrame {
 	static final int leftWidth = 300;
 	static final int rightWidth = 340;
 	static final int windowWidth = leftWidth + rightWidth;
-	
-	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -151,6 +155,37 @@ public class Xmlve extends JFrame {
 	        }
 	    });
 	    fileMenu.add(openMenuItem);
+	    
+	    JMenuItem saveMenuItem = new JMenuItem("Save", KeyEvent.VK_S);
+	    saveMenuItem.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		//JOptionPane.showMessageDialog(null, "Testing save ...");
+
+	            try {
+	                // Save the document to disk...
+	                Transformer tf = TransformerFactory.newInstance().newTransformer();
+	                tf.setOutputProperty(OutputKeys.INDENT, "yes");
+	                tf.setOutputProperty(OutputKeys.METHOD, "xml");
+	                tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
+
+	                DOMSource domSource = new DOMSource(document);
+	                
+	                // choosing file name and path
+	                String filename = "";
+	                String dir = "";
+	                saveFileDir(filename,dir);
+	                JOptionPane.showMessageDialog(null, "file name: "+filename);
+	                JOptionPane.showMessageDialog(null, "dir: "+dir);
+	                StreamResult sr = new StreamResult(new File(dir,filename));
+	                tf.transform(domSource, sr);
+
+	            } catch (TransformerException ex) {
+	                ex.printStackTrace();
+	            }
+	    	    }
+	    });
+	    fileMenu.add(saveMenuItem);
+	    
 
 	    //frame.setJMenuBar(menuBar);
 	    setJMenuBar(menuBar);
@@ -297,8 +332,18 @@ public class Xmlve extends JFrame {
 		item.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String newName;
-				newName = JOptionPane.showInputDialog("New name for the node: ");
-				changeNodeName(newName);
+				DefaultMutableTreeNode chosen;
+		    	// What's the last one you clicked?
+		        chosen = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		        if (chosen != null){
+		        	newName = JOptionPane.showInputDialog("New name for the node: ");
+		        	chosen.setUserObject(newName);
+		        }else{
+		        	JOptionPane.showMessageDialog(null, "No node selected!");
+		        }
+				
+				
+				//changeNodeName(newName);
 			}
 		});
 		menuPopUp.add(item);
@@ -352,20 +397,7 @@ public class Xmlve extends JFrame {
             }
         }
     }
-    /**
-     * Change the name of the currently selected node
-     * @param newName Name to change the node too
-     */
-    public void changeNodeName(String newName) {
-    	DefaultMutableTreeNode chosen;
-    	// What's the last one you clicked?
-        chosen = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-        if (chosen != null){
-        	chosen.setUserObject(newName);
-        }else{
-        	JOptionPane.showMessageDialog(null, "No node selected!");
-        }
-    }
+
 
 /**
  * Recursively build tree node from document node. Add attributes as leaves
@@ -438,6 +470,24 @@ class PopupTriggerListener extends MouseAdapter {
       }
     }
 }// end of inner class PopupTriggerListener extends MouseAdapter
+
+/**
+ * 
+ * @param tree
+ */
+
+private void saveFileDir(String aFilename, String aDir){
+	JFileChooser c = new JFileChooser();
+    // Demonstrate "Save" dialog:
+    int rVal = c.showSaveDialog(Xmlve.this);
+    if (rVal == JFileChooser.APPROVE_OPTION) {
+    	aFilename = c.getSelectedFile().getName();
+    	aDir = c.getCurrentDirectory().toString();
+    }
+    if (rVal == JFileChooser.CANCEL_OPTION) {
+    	JOptionPane.showMessageDialog(null, "no file selected!");
+    }
+}//end of private void saveFileDir(String aFilename, String aDir)
 
 public void expandAll(JTree tree) {
     int row = 0;
