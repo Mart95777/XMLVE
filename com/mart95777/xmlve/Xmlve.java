@@ -21,6 +21,7 @@ import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -236,6 +237,7 @@ public class Xmlve extends JFrame {
 		         public void mouseReleased(MouseEvent e) {
 		           if (SwingUtilities.isLeftMouseButton(e)) {
 		             //System.out.println("Left button released.");
+		        	   
 		           }
 		           if (SwingUtilities.isMiddleMouseButton(e)) {
 		             //System.out.println("Middle button released.");
@@ -272,6 +274,7 @@ public class Xmlve extends JFrame {
 		htmlPane.setEditable(false);
 		JScrollPane htmlView = new JScrollPane(htmlPane);
 		htmlView.setPreferredSize(new Dimension( rightWidth, windowHeight ));
+		htmlView.setViewportView(new JLabel("Display..."));
 
 		// Build split-pane view
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,treeView, htmlView );
@@ -360,9 +363,7 @@ public class Xmlve extends JFrame {
 		});
 		menuPopUp.add(item);
 		menuPopUp.addSeparator();
-		
-		
-		
+
 		item = new JMenuItem("Clear All");
 	    item.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
