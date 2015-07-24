@@ -75,6 +75,9 @@ public class Xmlve extends JFrame {
 	private Document document;
     private DefaultTreeModel treeModel;
     File fileToOpen;
+    JLabel htmlViewLabel = new JLabel("Display...");
+    JTextArea htmlViewText = new JTextArea("...starting");
+    
 
 	//= new JTree();
 	
@@ -86,6 +89,7 @@ public class Xmlve extends JFrame {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Xmlve frame = new Xmlve();
+		frame.htmlViewText.setEditable(false);
 
 	}
 	/**
@@ -219,51 +223,7 @@ public class Xmlve extends JFrame {
 //		             }
 //		         }
 //		     }
-		     // another version
-		     MouseListener ml = new MouseAdapter() {
-		         public void mousePressed(MouseEvent mouseEvent) {
-		           int modifiers = mouseEvent.getModifiers();
-		           if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-		             //System.out.println("Left button pressed.");
-		           }
-		           if ((modifiers & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
-		             //System.out.println("Middle button pressed.");
-		           }
-		           if ((modifiers & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
-		             //System.out.println("Right button pressed.");
-		        	   
-		           }
-		         }
-		         public void mouseReleased(MouseEvent e) {
-		           if (SwingUtilities.isLeftMouseButton(e)) {
-		             //System.out.println("Left button released.");
-		        	   
-		           }
-		           if (SwingUtilities.isMiddleMouseButton(e)) {
-		             //System.out.println("Middle button released.");
-		           }
-		           if (SwingUtilities.isRightMouseButton(e)) {
-		             //System.out.println("Right button released.");
-		        	   int selRow = tree.getRowForLocation(e.getX(), e.getY());
-				         TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
-				         if(selRow != -1) {
-				             if(e.getClickCount() == 1) {
-				                 //mySingleClick(selRow, selPath);
-				            	 //JOptionPane.showMessageDialog(null, "Testing click mouse, right released");
-				            	 if (e.isPopupTrigger()) {
-				                     menuPopUp.show(e.getComponent(), e.getX(), e.getY());
-				                   }
-				             }
-				             else if(e.getClickCount() == 2) {
-				                 //myDoubleClick(selRow, selPath);
-				             }
-				         }
-		           }
-		           //System.out.println();
-		         }
-		 };
-		 tree.addMouseListener(ml);
-		 tree.addMouseListener(new PopupTriggerListener());
+		    
 
 		// Build left-side view
 		JScrollPane treeView = new JScrollPane(tree);
@@ -274,7 +234,8 @@ public class Xmlve extends JFrame {
 		htmlPane.setEditable(false);
 		JScrollPane htmlView = new JScrollPane(htmlPane);
 		htmlView.setPreferredSize(new Dimension( rightWidth, windowHeight ));
-		htmlView.setViewportView(new JLabel("Display..."));
+		
+		htmlView.setViewportView(htmlViewText);
 
 		// Build split-pane view
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,treeView, htmlView );
@@ -377,6 +338,62 @@ public class Xmlve extends JFrame {
 	    	}
 		});
 		menuPopUp.add(item);
+		
+		// Mouse listener
+	     MouseListener ml = new MouseAdapter() {
+	         public void mousePressed(MouseEvent mouseEvent) {
+	           int modifiers = mouseEvent.getModifiers();
+	           if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+	             //System.out.println("Left button pressed.");
+	           }
+	           if ((modifiers & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
+	             //System.out.println("Middle button pressed.");
+	           }
+	           if ((modifiers & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
+	             //System.out.println("Right button pressed.");
+	        	   
+	        	   //htmlViewLabel.setText("test");
+	        	   //treeView.repaint();
+	           }
+	         }
+	         public void mouseReleased(MouseEvent e) {
+	           if (SwingUtilities.isLeftMouseButton(e)) {
+	             //System.out.println("Left button released.");
+	        	   DefaultMutableTreeNode selectedNode = 
+	        		       (DefaultMutableTreeNode)tree.getLastSelectedPathComponent(); 
+	        	   StringBuilder strb = new StringBuilder("");
+	        	   strb.append("Allows Children: "+selectedNode.getAllowsChildren());
+	        	   //strb.append('\n');
+	        	   strb.append(System.lineSeparator());
+	        	   strb.append("Parent: "+selectedNode.getParent());
+	        	   strb.append(System.lineSeparator());
+	        	   htmlViewText.setText(strb.toString());
+	           }
+	           if (SwingUtilities.isMiddleMouseButton(e)) {
+	             //System.out.println("Middle button released.");
+	           }
+	           if (SwingUtilities.isRightMouseButton(e)) {
+	             //System.out.println("Right button released.");
+	        	   int selRow = tree.getRowForLocation(e.getX(), e.getY());
+			         TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+			         if(selRow != -1) {
+			             if(e.getClickCount() == 1) {
+			                 //mySingleClick(selRow, selPath);
+			            	 //JOptionPane.showMessageDialog(null, "Testing click mouse, right released");
+			            	 if (e.isPopupTrigger()) {
+			                     menuPopUp.show(e.getComponent(), e.getX(), e.getY());
+			                   }
+			             }
+			             else if(e.getClickCount() == 2) {
+			                 //myDoubleClick(selRow, selPath);
+			             }
+			         }
+	           }
+	           //System.out.println();
+	         }
+	 };
+	 tree.addMouseListener(ml);
+	 tree.addMouseListener(new PopupTriggerListener());
 		
 		this.add(mainPanel);
 		//this.pack();
