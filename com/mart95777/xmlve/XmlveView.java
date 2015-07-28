@@ -136,23 +136,28 @@ public class XmlveView extends JFrame {
 	    saveMenuItem.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		//JOptionPane.showMessageDialog(null, "Testing save ...");
-
-	            try {
-	                // Save the document to disk...
-	                Transformer tf = TransformerFactory.newInstance().newTransformer();
-	                tf.setOutputProperty(OutputKeys.INDENT, "yes");
-	                tf.setOutputProperty(OutputKeys.METHOD, "xml");
-	                tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
-
-//	                DOMSource domSource = new DOMSource(document);
-	                
-	                // choosing file name and path
-//	                StreamResult sr = new StreamResult(saveFile());
-//	                tf.transform(domSource, sr);
-
-	            } catch (TransformerException ex) {
-	                ex.printStackTrace();
-	            }
+	    		File fileToSave = saveFile();
+	    		
+	    		
+//	    		JFileChooser c = new JFileChooser();
+//	    		int rVal = c.showSaveDialog(XmlveView.this);
+//
+//	            try {
+//	                // Save the document to disk...
+//	                Transformer tf = TransformerFactory.newInstance().newTransformer();
+//	                tf.setOutputProperty(OutputKeys.INDENT, "yes");
+//	                tf.setOutputProperty(OutputKeys.METHOD, "xml");
+//	                tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
+//
+////	                DOMSource domSource = new DOMSource(document);
+//	                
+//	                // choosing file name and path
+////	                StreamResult sr = new StreamResult(saveFile());
+////	                tf.transform(domSource, sr);
+//
+//	            } catch (TransformerException ex) {
+//	                ex.printStackTrace();
+//	            }
 	    	    }
 	    });
 	    fileMenu.add(saveMenuItem);
@@ -183,11 +188,11 @@ public class XmlveView extends JFrame {
 		JScrollPane htmlView = new JScrollPane(htmlPane);
 		htmlView.setPreferredSize(new Dimension( rightWidth, windowHeight/2 ));
 		
-		htmlView.setViewportView(htmlViewText);
+		//htmlView.setViewportView(htmlViewText);
 		
 		// Add both to the right split pane
 		JSplitPane splitPaneRight = new JSplitPane(JSplitPane.VERTICAL_SPLIT,infoView, htmlView );
-		
+		splitPaneRight.setDividerLocation(150);
 		
 
 		// Build split-pane view
