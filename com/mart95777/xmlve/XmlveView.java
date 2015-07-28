@@ -168,16 +168,30 @@ public class XmlveView extends JFrame {
 		JScrollPane treeView = new JScrollPane(tree);
 		treeView.setPreferredSize(new Dimension( leftWidth, windowHeight ));
 
-		// Build right-side view
+		// Build right-side view, which will be now another split pane
+		// build upper info
+		JEditorPane infoPane = new JEditorPane("text/html","");
+		infoPane.setEditable(false);
+		JScrollPane infoView = new JScrollPane(infoPane);
+		infoView.setPreferredSize(new Dimension( rightWidth, windowHeight/2 ));
+		
+		infoView.setViewportView(htmlViewText);
+		
+		// build lower info
 		JEditorPane htmlPane = new JEditorPane("text/html","");
-		htmlPane.setEditable(false);
+		htmlPane.setEditable(true);
 		JScrollPane htmlView = new JScrollPane(htmlPane);
-		htmlView.setPreferredSize(new Dimension( rightWidth, windowHeight ));
+		htmlView.setPreferredSize(new Dimension( rightWidth, windowHeight/2 ));
 		
 		htmlView.setViewportView(htmlViewText);
+		
+		// Add both to the right split pane
+		JSplitPane splitPaneRight = new JSplitPane(JSplitPane.VERTICAL_SPLIT,infoView, htmlView );
+		
+		
 
 		// Build split-pane view
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,treeView, htmlView );
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,treeView, splitPaneRight );
 		splitPane.setContinuousLayout( true );
 		splitPane.setDividerLocation( leftWidth );
 		//splitPane.setPreferredSize(new Dimension( windowWidth + 10, windowHeight+10 ));
