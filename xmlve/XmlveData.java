@@ -1,4 +1,4 @@
-package com.mart95777.xmlve;
+package xmlve;
 
 import org.w3c.dom.Document;
 

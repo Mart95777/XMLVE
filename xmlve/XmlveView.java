@@ -1,7 +1,4 @@
-/**
- * 
- */
-package com.mart95777.xmlve;
+package xmlve;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -15,13 +12,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -34,16 +29,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
-
-
-
-
-
-
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -51,50 +38,27 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-/**
- * @author marcin
- *
- */
-public class Xmlve extends JFrame {
+import xmlve.Xmlve_old.PopupTriggerListener;
 
-	/**
-	 * @param args
-	 */
+public class XmlveView extends JFrame {
 	public static final String VERSION = "1.0.0";
 	JPanel mainPanel;
 	JTextArea testText;
 	JMenuBar menuBar;
 	JPopupMenu menuPopUp;
 	private JTree tree;
-	private Document document;
-    private DefaultTreeModel treeModel;
-    File fileToOpen;
-    JLabel htmlViewLabel = new JLabel("Display...");
-    JTextArea htmlViewText = new JTextArea("...starting");
-    
-
-	//= new JTree();
+	
+	JTextArea htmlViewText = new JTextArea("...starting");
 	
 	static final int windowHeight = 460;
 	static final int leftWidth = 300;
 	static final int rightWidth = 340;
 	static final int windowWidth = leftWidth + rightWidth;
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		//Xmlve frame = new Xmlve();
-		//frame.htmlViewText.setEditable(false);
-		
-		XmlveView frameView = new XmlveView();
-		frameView.htmlViewText.setEditable(false);
-
-	}
 	/**
 	 * Methods for the constructor
 	 */
@@ -113,11 +77,14 @@ public class Xmlve extends JFrame {
 		
 		pn.add(cmp, gridcns);
 	} // end private void addcomponent
+	
 	/**
-	 * CONSTRUCTOR!
+	 * CONSTRUCTOR
 	 */
-	public Xmlve(){
-		super("XML VE, viewer and editor, ver. " + VERSION);
+
+	public XmlveView() {
+		// TODO Auto-generated constructor stub
+		super("XML VE, viewer and editor, Viewer ver. " + VERSION);
 		this.setSize(700,500);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -147,15 +114,16 @@ public class Xmlve extends JFrame {
 	    		//JOptionPane.showMessageDialog(null, "Testing open ...");
 	    		JFileChooser c = new JFileChooser();
 	    	    // Demonstrate "Open" dialog:
-	    		int rVal = c.showOpenDialog(Xmlve.this);
-	    	    if (rVal == JFileChooser.APPROVE_OPTION) {
-	    	    fileToOpen = c.getSelectedFile();
-	    	    // parsing file
-	    	    document = parseDomFromXml(fileToOpen);
-	    	    treeModel = new DefaultTreeModel(buildTreeNode(document));
-	    	    tree.setModel(treeModel);
-	    	    ((DefaultTreeModel)tree.getModel()).reload();
-	    	    }
+	    		int rVal = c.showOpenDialog(XmlveView.this);
+	    		
+//	    	    if (rVal == JFileChooser.APPROVE_OPTION) {
+//	    	    fileToOpen = c.getSelectedFile();
+//	    	    // parsing file
+//	    	    document = parseDomFromXml(fileToOpen);
+//	    	    treeModel = new DefaultTreeModel(buildTreeNode(document));
+//	    	    tree.setModel(treeModel);
+//	    	    ((DefaultTreeModel)tree.getModel()).reload();
+//	    	    }
 	    	    if (rVal == JFileChooser.CANCEL_OPTION) {
 	    	    //filename.setText("You pressed cancel");
 	    	    //dir.setText("");
@@ -168,80 +136,67 @@ public class Xmlve extends JFrame {
 	    saveMenuItem.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		//JOptionPane.showMessageDialog(null, "Testing save ...");
-
-	            try {
-	                // Save the document to disk...
-	                Transformer tf = TransformerFactory.newInstance().newTransformer();
-	                tf.setOutputProperty(OutputKeys.INDENT, "yes");
-	                tf.setOutputProperty(OutputKeys.METHOD, "xml");
-	                tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
-
-	                DOMSource domSource = new DOMSource(document);
-	                
-	                // choosing file name and path
-	                StreamResult sr = new StreamResult(saveFile());
-	                tf.transform(domSource, sr);
-
-	            } catch (TransformerException ex) {
-	                ex.printStackTrace();
-	            }
+	    		File fileToSave = saveFile();
+	    		
+	    		
+//	    		JFileChooser c = new JFileChooser();
+//	    		int rVal = c.showSaveDialog(XmlveView.this);
+//
+//	            try {
+//	                // Save the document to disk...
+//	                Transformer tf = TransformerFactory.newInstance().newTransformer();
+//	                tf.setOutputProperty(OutputKeys.INDENT, "yes");
+//	                tf.setOutputProperty(OutputKeys.METHOD, "xml");
+//	                tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
+//
+////	                DOMSource domSource = new DOMSource(document);
+//	                
+//	                // choosing file name and path
+////	                StreamResult sr = new StreamResult(saveFile());
+////	                tf.transform(domSource, sr);
+//
+//	            } catch (TransformerException ex) {
+//	                ex.printStackTrace();
+//	            }
 	    	    }
 	    });
 	    fileMenu.add(saveMenuItem);
 	    
-
 	    //frame.setJMenuBar(menuBar);
 	    setJMenuBar(menuBar);
-	    
-//	    menuBar.addActionListener(new ActionListener() {
-//			  public void actionPerformed(ActionEvent evt) {
-//				// 
-//				//treeOfUser.invalidate();
-//				//treeOfUser.validate();
-//				//treeOfUser.repaint();
-//				//treeOfUser.setModel(modelTree);
-//				//modelTree.reload();
-//				mainPanel.updateUI();
-//				JOptionPane.showMessageDialog(null, "So?...");
-//				
-//			  }
-//		});
-		
-		
-		
+
 		// Set up the tree
 		tree = new JTree();
-		
-//		 MouseListener ml = new MouseAdapter() {
-//		     public void mousePressed(MouseEvent e) {
-//		         int selRow = tree.getRowForLocation(e.getX(), e.getY());
-//		         TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
-//		         if(selRow != -1) {
-//		             if(e.getClickCount() == 1) {
-//		                 //mySingleClick(selRow, selPath);
-//		            	 JOptionPane.showMessageDialog(null, "Testing click mouse");
-//		             }
-//		             else if(e.getClickCount() == 2) {
-//		                 //myDoubleClick(selRow, selPath);
-//		             }
-//		         }
-//		     }
 		    
 
 		// Build left-side view
 		JScrollPane treeView = new JScrollPane(tree);
 		treeView.setPreferredSize(new Dimension( leftWidth, windowHeight ));
 
-		// Build right-side view
-		JEditorPane htmlPane = new JEditorPane("text/html","");
-		htmlPane.setEditable(false);
-		JScrollPane htmlView = new JScrollPane(htmlPane);
-		htmlView.setPreferredSize(new Dimension( rightWidth, windowHeight ));
+		// Build right-side view, which will be now another split pane
+		// build upper info
+		JEditorPane infoPane = new JEditorPane("text/html","");
+		infoPane.setEditable(false);
+		JScrollPane infoView = new JScrollPane(infoPane);
+		infoView.setPreferredSize(new Dimension( rightWidth, windowHeight/2 ));
 		
-		htmlView.setViewportView(htmlViewText);
+		infoView.setViewportView(htmlViewText);
+		
+		// build lower info
+		JEditorPane htmlPane = new JEditorPane("text/html","");
+		htmlPane.setEditable(true);
+		JScrollPane htmlView = new JScrollPane(htmlPane);
+		htmlView.setPreferredSize(new Dimension( rightWidth, windowHeight/2 ));
+		
+		//htmlView.setViewportView(htmlViewText);
+		
+		// Add both to the right split pane
+		JSplitPane splitPaneRight = new JSplitPane(JSplitPane.VERTICAL_SPLIT,infoView, htmlView );
+		splitPaneRight.setDividerLocation(150);
+		
 
 		// Build split-pane view
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,treeView, htmlView );
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,treeView, splitPaneRight );
 		splitPane.setContinuousLayout( true );
 		splitPane.setDividerLocation( leftWidth );
 		//splitPane.setPreferredSize(new Dimension( windowWidth + 10, windowHeight+10 ));
@@ -457,23 +412,6 @@ private DefaultMutableTreeNode buildTreeNode(Node docNode) {
     return treeNode;
 }// end of buildTreeNode(Node docNode) 
 
-/**
- * Parse an XML file into document object model.
- *
- * @param filePath
- * @return A DOM document.
- */
-private Document parseDomFromXml(File file) {
-    Document document = null;
-    try {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        document = dbf.newDocumentBuilder().parse(file);
-        document.normalizeDocument();
-    } catch (IOException | ParserConfigurationException | SAXException e) {
-        e.printStackTrace();
-    }
-    return document;
-}//end of parseDomFromXml(File file)
 
 /**
  * Inner class
@@ -496,7 +434,7 @@ private File saveFile(){
 	JFileChooser c = new JFileChooser();
 	File returnFile;
     // Demonstrate "Save" dialog:
-    int rVal = c.showSaveDialog(Xmlve.this);
+    int rVal = c.showSaveDialog(XmlveView.this);
     if (rVal == JFileChooser.APPROVE_OPTION) {
     	returnFile = c.getSelectedFile();
     	return returnFile;
@@ -524,4 +462,4 @@ public void collapseAll(JTree tree) {
       }
 }//end of public void collapseAll(JTree tree)
 
-}// end of Xmlve class
+}// class end
